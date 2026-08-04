@@ -71,9 +71,8 @@ Resources:
 
 ## CDK
 
-※イメージ
-
-### bin
+- スタック（Stack）= CloudFormationのスタックを表すクラス
+- Stackクラスを書いてインスタンス化すると、そのインスタンスがCFテンプレートに変換される
 
 ```js
 export class OmikujiStack {
@@ -96,14 +95,4 @@ export class OmikujiStack {
     
   }
 }
-```
-
-### lib
-
-- `cdk synth`で実行される
-- このStackから作られるAWSリソース全体を表すJavaScriptオブジェクト
-- 上記オブジェクトが`CFテンプレート`に変換される
-
-```js
-new OmikujiStack()
 ```
