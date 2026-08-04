@@ -75,7 +75,7 @@ Resources:
 - Stackクラスを書いてインスタンス化すると、そのインスタンスがCFテンプレートに変換される
 
 ```js
-export class OmikujiStack {
+export class OmikujiStack extends cdk.Stack {
 
   constructor() {
 
