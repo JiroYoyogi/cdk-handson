@@ -357,11 +357,36 @@ cdk deploy TodoProdStack
 cdk deploy --all
 ```
 
-## Lambdaをローカル実行する
-
 ## テストを書く
 
-- 書いちゃってよいかも。実行だけして貰う
+ザクっと実装してるので下記で実行
+
+```
+npm run test -- --verbose
+```
+
+## Lambdaをローカル実行する
+
+- [AWS SAM CLI](https://docs.aws.amazon.com/ja_jp/serverless-application-model/latest/developerguide/install-sam-cli.html) と Dockerをインストールしてることが前提
+- `cdk synth`でCFテンプレート作成
+- 下記コマンドで実行
+
+Lambdaのみ
+
+```
+sam local invoke \
+  -t cdk.out/CdkHandsonStack.template.json \
+  OmikujiFunction
+```
+
+APIGW + Lambda
+
+```
+sam local start-api \
+  -t cdk.out/CdkHandsonStack.template.json \
+  --host 127.0.0.1 \
+  --port 3000
+```
 
 ## L1 ? L2 ? L3 ?
 
