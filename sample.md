@@ -75,6 +75,10 @@ Resources:
 - Stackクラスを書いてインスタンス化すると、そのインスタンスがCFテンプレートに変換される
 
 ```js
+import { Function } from 'aws-cdk-lib/aws-lambda';
+import { HttpApi } from 'aws-cdk-lib/aws-apigatewayv2';
+import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
+
 export class OmikujiStack extends cdk.Stack {
 
   constructor() {
