@@ -26,22 +26,6 @@ CDK CLIはNode.js製のCLIなのでNode.jsがインストールされてるこ�
 
 https://docs.aws.amazon.com/ja_jp/cdk/v2/guide/cli.html
 
-# 初期状態コードの準備
-
-## 方針
-
-このリポジトリのコードをDL（TSを含めて関連モジュールのバージョンを固定したいため）
-
-## 本来なら...
-
-下記コマンドでプロジェクトを作成
-
-```
-mkdir cdk-handson
-cd cdk-handson
-cdk init app --language typescript
-```
-
 # CDKからCloudFormationテンプレートを作るイメージ
 
 ## どのようにコードを書いていくか
@@ -58,7 +42,32 @@ cdk init app --language typescript
 2. `cdk synth` でTSを実行 → CloudFormationテンプレート
 3. `cdk deploy` で 2 のテンプレートを元にデプロイ（`deploy`は`synth`も実行）
 
-# libとbin
+# 初期状態コードの準備
+
+## 方針
+
+このリポジトリのコードをDL（TSを含めて関連モジュールのバージョンを固定したいため）
+
+## 本来なら...
+
+下記コマンドでプロジェクトを作成
+
+```
+mkdir cdk-handson
+cd cdk-handson
+cdk init app --language typescript
+```
+
+# ハンズオン手順
+
+1. ディレクトリ構造を確認
+1. Lambdaを作成（関数のコードはインラインで埋め込み）
+1. Lambdaを作成（関数のコードは外部JSファイル）
+1. Lambdaを作成（関数のコードは外部TSファイル）
+1. Lambdaを作成（TS * Node.jsライブラリ）
+1. APIGatewayを作成・Lambdaと紐付け
+
+# ディレクトリ構造を確認
 
 ## lib
 
@@ -72,14 +81,6 @@ cdk init app --language typescript
 - binはスタックをインスタンス化する場所
 - インスタンス化 → そのStackから作られるAWSリソース全体を表すJavaScriptオブジェクト
 - 上記オブジェクトが実際のCFテンプレートに変換される（`cdk synth`）
-
-# ハンズオン手順
-
-1. Lambdaを作成（関数のコードはインラインで埋め込み）
-1. Lambdaを作成（関数のコードは外部JSファイル）
-1. Lambdaを作成（関数のコードは外部TSファイル）
-1. Lambdaを作成（TS * Node.jsライブラリ）
-1. APIGatewayを作成・Lambdaと紐付け
 
 # Lambdaを作成
 
