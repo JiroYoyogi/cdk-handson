@@ -121,7 +121,21 @@ exports.handler = async (event) => {
 
 ## （初めてCDKでデプロイする際の設定）
 
+現在利用しているAWSプロファイルを対象に実行
+
+```
+cdk bootstrap
+```
+
+アカウントとリージョンを明示的に指定
+
+```
+cdk bootstrap --profile プロファイル名 --region リージョン
+```
+
 ## LambdaをCDKでデプロイ
+
+cdkでAWSへデプロイするための初期設定を行うコマンド。デプロイ時に利用するIAMロールやS3バケットなどが作成されます。
 
 ```
 cdk deploy
