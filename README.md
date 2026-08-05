@@ -42,7 +42,18 @@ https://docs.aws.amazon.com/ja_jp/cdk/v2/guide/cli.html
 2. `cdk synth` でTSを実行 → CloudFormationテンプレート
 3. `cdk deploy` で 2 のテンプレートを元にデプロイ（`deploy`は`synth`も実行）
 
-# 初期状態コードの準備
+
+# ハンズオン手順
+
+1. 初期コードを準備
+1. ディレクトリ構造を確認
+1. Lambdaを作成（関数のコードはインラインで埋め込み）
+1. Lambdaを作成（関数のコードは外部JSファイル）
+1. Lambdaを作成（関数のコードは外部TSファイル）
+1. Lambdaを作成（TS * Node.jsライブラリ）
+1. APIGatewayを作成・Lambdaと紐付け
+
+# 初期コードを準備
 
 ## 方針
 
@@ -57,15 +68,6 @@ mkdir cdk-handson
 cd cdk-handson
 cdk init app --language typescript
 ```
-
-# ハンズオン手順
-
-1. ディレクトリ構造を確認
-1. Lambdaを作成（関数のコードはインラインで埋め込み）
-1. Lambdaを作成（関数のコードは外部JSファイル）
-1. Lambdaを作成（関数のコードは外部TSファイル）
-1. Lambdaを作成（TS * Node.jsライブラリ）
-1. APIGatewayを作成・Lambdaと紐付け
 
 # ディレクトリ構造を確認
 
