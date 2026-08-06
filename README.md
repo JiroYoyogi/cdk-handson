@@ -26,23 +26,6 @@ CDK CLIはNode.js製のCLIなのでNode.jsがインストールされてるこ�
 
 https://docs.aws.amazon.com/ja_jp/cdk/v2/guide/cli.html
 
-# CDKからCloudFormationテンプレートを作るイメージ
-
-## どのようにコードを書いていくか
-
-- 各AWSリソースのクラス（S3、Lambda、API Gatewayなど）が用意されている
-- クラスをインスタンスにする際に設定を渡す
-- 同じスタックに定義したリソース（インスタンス）は、同じCFンプレートとして管理される
-
-参考：[CloudFormationとCDKのコードの違い](./sample.md)
-
-## どのようにデプロイされるのか
-
-1. TypeScript（各言語）でAWSリソースを定義
-2. `cdk synth` でTSを実行 → CloudFormationテンプレート
-3. `cdk deploy` で 2 のテンプレートを元にデプロイ（`deploy`は`synth`も実行）
-
-
 # ハンズオン手順
 
 1. 初期コードを準備
@@ -121,13 +104,15 @@ exports.handler = async (event) => {
 
 ## 初めてCDKでデプロイする際の設定
 
-現在利用しているAWSプロファイルを対象に実行
+cdkでAWSへデプロイするための初期設定を行うコマンド。デプロイ時に利用するIAMロールやS3バケットなどが作成されます。
+
+- 現在利用しているAWSプロファイルを対象に実行
 
 ```
 cdk bootstrap
 ```
 
-アカウントとリージョンを明示的に指定
+- アカウントとリージョンを明示的に指定
 
 ```
 cdk bootstrap --profile プロファイル名 --region リージョン
@@ -135,7 +120,13 @@ cdk bootstrap --profile プロファイル名 --region リージョン
 
 ## LambdaをCDKでデプロイ
 
-cdkでAWSへデプロイするための初期設定を行うコマンド。デプロイ時に利用するIAMロールやS3バケットなどが作成されます。
+- CFnテンプレート作成 
+
+```
+cdk synth
+```
+
+- CFnテンプレート作成 + デプロイ
 
 ```
 cdk deploy
