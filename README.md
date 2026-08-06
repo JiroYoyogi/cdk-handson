@@ -73,9 +73,9 @@ cdk init app --language typescript
 
 ## Lambdaを作成（関数のコードはインラインで埋め込み）
 
-- Lambda関数を作るクラス（コンストラクタ）の読み込み
-- Functionがコンストラクタ
-- RuntimeやCodeは関数定義に必要な定数やメソッドを提供
+- Lambda関数を作るクラス（コンストラクト）の読み込み
+- lambda.Functionがコンストラクト
+- lambda.Runtimeやlambda.Codeは関数定義に必要な定数やメソッドを提供
 
 ```ts
 import * as lambda from 'aws-cdk-lib/aws-lambda';
@@ -272,7 +272,7 @@ Lambda関数の名前を変更
 
 # APIGatewayを作成・Lambdaと紐付け
 
-- APIGateway（HTTP）を作成するクラス（コンストラクタ）など読み込み
+- APIGateway（HTTP）を作成するクラス（コンストラクト）など読み込み
 - APIGatewayとLambdaの統合作成
 - APIルートと統合の紐付け
 
