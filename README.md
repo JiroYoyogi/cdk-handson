@@ -195,6 +195,7 @@ TSのコンパイルが必要になる。そのためにはLambdaを作るクラ
 
 ```ts
 import * as nodeLambda from 'aws-cdk-lib/aws-lambda-nodejs';
+import * as path from 'node:path';
 ```
 
 上記クラスを使ったLambdaの定義
@@ -280,9 +281,9 @@ import * as cdk from 'aws-cdk-lib/core';
 import { Construct } from 'constructs';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as nodeLambda from 'aws-cdk-lib/aws-lambda-nodejs';
+import * as path from 'node:path';
 // 以下のように必要なクラスやメソッドのみインポートする方法もある
 // import { Function, Runtime, Code } from 'aws-cdk-lib/aws-lambda';
-import * as path from 'node:path';
 import { HttpApi, HttpMethod, CorsHttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
 import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 
