@@ -31,10 +31,9 @@ https://docs.aws.amazon.com/ja_jp/cdk/v2/guide/cli.html
 1. 初期コードを準備
 1. ディレクトリ構造を確認
 1. Lambdaを作成（関数のコードはインラインで埋め込み）
-1. Lambdaを作成（関数のコードは外部JSファイル）
-1. Lambdaを作成（関数のコードは外部TSファイル）
-1. Lambdaを作成（TS * Node.jsライブラリ）
 1. APIGatewayを作成・Lambdaと紐付け
+1. Lambdaを更新①（外部JSファイル）
+1. Lambdaを更新②（TS * Node.jsライブラリ）
 
 # 初期コードを準備
 
@@ -69,29 +68,26 @@ cdk init app --language typescript
 
 # Lambdaを作成
 
-参考：[公式リファレンス](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda-readme.html)
-
 ## Lambdaを作成（関数のコードはインラインで埋め込み）
 
-- Lambda関数を作るクラス（コンストラクト）の読み込み
-- lambda.Functionがコンストラクト
-- lambda.Runtimeやlambda.Codeは関数定義に必要な定数やメソッドを提供
+- Lambda関数を作るクラス（コンストラクト）や関連する定数・メソッドの読み込み
 
 ```ts
-import * as lambda from 'aws-cdk-lib/aws-lambda';
-// 以下のように必要なクラスやメソッドのみインポートする方法もある
-// import { Function, Runtime, Code } from 'aws-cdk-lib/aws-lambda';
+import { Function, Runtime, Code } from 'aws-cdk-lib/aws-lambda';
 ```
 
 - Lambda関数の定義
 
+参考：[公式リファレンス・Lambda](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda-readme.html)
+参考：[公式リファレンス・APIGateway（HTTP API）](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_apigatewayv2-readme.html)
+
 
 ```ts
     // HelloFunction は CloudFormation の 論理ID の元になる
-    new lambda.Function(this, 'HelloFunction', {
-      runtime: lambda.Runtime.NODEJS_24_X,
+    const func = new Function(this, 'OmikujiFunction', {
+      runtime: Runtime.NODEJS_24_X,
       handler: 'index.handler',
-      code: lambda.Code.fromInline(`
+      code: Code.fromInline(`
 exports.handler = async (event) => {
   return {
     statusCode: 200,
@@ -138,6 +134,33 @@ cdk deploy
 cdk deploy --profile プロファイル名
 ```
 
+# APIGatewayを作成・Lambdaと紐付け
+
+1. APIGateway（HTTP）を作成するクラス（コンストラクト）など読み込み
+1. APIGatewayとLambdaの統合作成
+1. APIルートと統合の紐付け
+
+「1. APIGateway（HTTP）を作成するクラス（コンストラクト）など読み込み」
+
+```ts
+import { HttpApi, HttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
+import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
+```
+
+「2. APIGatewayとLambdaの統合作成」と「3. APIルートと統合の紐付け」
+
+```ts
+    const api = new HttpApi(this, "OmikujiHttpApi");
+
+    const integration = new HttpLambdaIntegration('OmikujiFunctionIntegration', func);
+
+    api.addRoutes({
+      path: '/omikuji',
+      methods: [HttpMethod.GET],
+      integration
+    });
+```
+
 ## Lambdaを作成（関数のコードは外部JSファイル）
 
 - lambda/index.mjs
@@ -156,71 +179,18 @@ export const handler = async (event) => {
 - cdk-handson-stack.ts
 
 ```ts
-    new lambda.Function(this, 'HelloFunction', {
-      runtime: lambda.Runtime.NODEJS_24_X,
+    const func = new Function(this, 'OmikujiFunction', {
+      runtime: Runtime.NODEJS_24_X,
       handler: "index.handler", // ファイル名 + ハンドラー名
-      code: lambda.Code.fromAsset("lambda"), // ディレクトリ名
-    });
-```
-
-## Lambdaを作成（関数のコードは外部TSファイル）
-
-- Lambdaの型をインストール
-
-```
-npm i @types/aws-lambda -D 
-```
-
-- lambda/index.ts
-
-```ts
-import type {
-  APIGatewayProxyEventV2,
-  APIGatewayProxyStructuredResultV2,
-} from 'aws-lambda';
-
-export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyStructuredResultV2> => {
-  // TODO implement
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify('Hello from TS Lambda!!!!!!!!!!'),
-  };
-  return response;
-};
-```
-
-- lib/cdk-handson-stack.ts
-
-TSのコンパイルが必要になる。そのためにはLambdaを作るクラスを変更する必要
-
-```ts
-import * as nodeLambda from 'aws-cdk-lib/aws-lambda-nodejs';
-import * as path from 'node:path';
-```
-
-上記クラスを使ったLambdaの定義
-
-```ts
-    new nodeLambda.NodejsFunction(this, 'HelloFunction', {
-      runtime: lambda.Runtime.NODEJS_24_X,
-      handler: "index.handler",
-      entry: path.join(__dirname, '../lambda/index.ts'),
+      code: Code.fromAsset("lambda"), // ディレクトリ名
     });
 ```
 
 ## Lambdaを作成（TS * Node.jsライブラリ）
 
-- ライブラリインストール
-
-[色んなランダムの値を作るライブラリ](https://www.npmjs.com/package/random)
-
-```
-npm i random
-```
-
 - lambda/index.ts
 
-上記ライブラリを使って”おみくじ”関数に改造
+Node.jsライブラリを使った”おみくじ”関数を作成
 
 ```ts
 import type {
@@ -257,33 +227,47 @@ export const handler = async function (
 };
 ```
 
+- Lambdaの型をインストール
+
+```
+npm i @types/aws-lambda -D 
+```
+
+- ライブラリインストール
+
+[色んなランダムの値を作るライブラリ](https://www.npmjs.com/package/random)
+
+```
+npm i random
+```
+
 - lib/cdk-handson-stack.ts
 
-Lambda関数の名前を変更
+TSのコンパイルが必要になる。そのためにはLambdaを作るクラスを変更する必要
 
 ```ts
-    // HelloFunction → OmikujiFunction
-    new nodeLambda.NodejsFunction(this, 'OmikujiFunction', {
-      runtime: lambda.Runtime.NODEJS_24_X,
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import * as path from 'node:path';
+```
+
+上記クラスを使ったLambdaの定義
+
+```ts
+    const func = new NodejsFunction(this, 'OmikujiFunction', {
+      runtime: Runtime.NODEJS_24_X,
       handler: "index.handler",
       entry: path.join(__dirname, '../lambda/index.ts'),
     });
 ```
 
-# APIGatewayを作成・Lambdaと紐付け
-
-- APIGateway（HTTP）を作成するクラス（コンストラクト）など読み込み
-- APIGatewayとLambdaの統合作成
-- APIルートと統合の紐付け
+# 完成コード
 
 ```ts
 import * as cdk from 'aws-cdk-lib/core';
 import { Construct } from 'constructs';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as nodeLambda from 'aws-cdk-lib/aws-lambda-nodejs';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import * as path from 'node:path';
-// 以下のように必要なクラスやメソッドのみインポートする方法もある
-// import { Function, Runtime, Code } from 'aws-cdk-lib/aws-lambda';
+import { Runtime, Code } from 'aws-cdk-lib/aws-lambda';
 import { HttpApi, HttpMethod, CorsHttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
 import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 
@@ -291,8 +275,8 @@ export class CdkHandsonStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const func = new nodeLambda.NodejsFunction(this, 'OmikujiFunction', {
-      runtime: lambda.Runtime.NODEJS_24_X,
+    const func = new NodejsFunction(this, 'OmikujiFunction', {
+      runtime: Runtime.NODEJS_24_X,
       handler: "index.handler",
       entry: path.join(__dirname, '../lambda/index.ts'),
     });
