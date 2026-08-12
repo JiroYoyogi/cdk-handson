@@ -78,22 +78,24 @@ import { Function, Runtime, Code } from 'aws-cdk-lib/aws-lambda';
 
 - Lambda関数の定義
 
-参考：[公式リファレンス・Lambda](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda-readme.html)
-参考：[公式リファレンス・APIGateway（HTTP API）](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_apigatewayv2-readme.html)
+【参考】
+
+- [公式リファレンス・Lambda](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda-readme.html)
+- [公式リファレンス・APIGateway（HTTP API）](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_apigatewayv2-readme.html)
 
 
 ```ts
-    // HelloFunction は CloudFormation の 論理ID の元になる
+    // OmikujiFunction は CloudFormation の 論理ID の元になる
     const func = new Function(this, 'OmikujiFunction', {
       runtime: Runtime.NODEJS_24_X,
       handler: 'index.handler',
       code: Code.fromInline(`
-exports.handler = async (event) => {
-  return {
-    statusCode: 200,
-    body: 'Hello from Lambda!'
-  };
-};
+        exports.handler = async (event) => {
+          return {
+            statusCode: 200,
+            body: 'Hello from Lambda!'
+          };
+        };
         `)
     });
 ```
