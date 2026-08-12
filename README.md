@@ -78,10 +78,7 @@ import { Function, Runtime, Code } from 'aws-cdk-lib/aws-lambda';
 
 - Lambda関数の定義
 
-【参考】
-
-- [公式リファレンス・Lambda](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda-readme.html)
-- [公式リファレンス・APIGateway（HTTP API）](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_apigatewayv2-readme.html)
+公式リファレンス：[Lambdaクラス](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda-readme.html)、[APIGateway（HTTP API）クラス](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_apigatewayv2-readme.html)
 
 
 ```ts
