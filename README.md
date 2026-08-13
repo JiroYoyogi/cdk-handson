@@ -166,7 +166,7 @@ import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations
     });
 ```
 
-## Lambdaを作成（関数のコードは外部JSファイル）
+## Lambdaを更新①（外部JSファイル）
 
 - lambda/index.mjs
 
@@ -191,7 +191,7 @@ export const handler = async (event) => {
     });
 ```
 
-## Lambdaを作成（TS * Node.jsライブラリ）
+## Lambdaを更新②（TS * Node.jsライブラリ）
 
 - lambda/index.ts
 
