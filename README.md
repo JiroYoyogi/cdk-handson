@@ -133,7 +133,13 @@ cdk deploy
 cdk deploy --profile プロファイル名
 ```
 
-# APIGatewayを作成・Lambdaと紐付け
+## 公式リファレンス
+
+- [Lambdaクラス](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda-readme.html)
+- [APIGateway（HTTP API）クラス](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_apigatewayv2-readme.html)
+
+
+## APIGatewayを作成・Lambdaと紐付け
 
 1. APIGateway（HTTP）を作成するクラス（コンストラクト）など読み込み
 1. APIGatewayとLambdaの統合作成
