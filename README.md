@@ -139,7 +139,7 @@ cdk deploy --profile プロファイル名
 - [APIGateway（HTTP API）クラス](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_apigatewayv2-readme.html)
 
 
-## APIGatewayを作成・Lambdaと紐付け
+# APIGatewayを作成・Lambdaと紐付け
 
 1. APIGateway（HTTP）を作成するクラス（コンストラクト）など読み込み
 1. APIGatewayとLambdaの統合作成
@@ -166,7 +166,7 @@ import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations
     });
 ```
 
-## Lambdaを更新①（外部JSファイル）
+# Lambdaを更新①（外部JSファイル）
 
 - lambda/index.mjs
 
@@ -191,7 +191,7 @@ export const handler = async (event) => {
     });
 ```
 
-## Lambdaを更新②（TS * Node.jsライブラリ）
+# Lambdaを更新②（TS * Node.jsライブラリ）
 
 - lambda/index.ts
 
@@ -325,7 +325,7 @@ export class CdkHandsonStack extends cdk.Stack {
 }
 ```
 
-# その他
+# 付録
 
 ## テストを書く
 
@@ -464,47 +464,3 @@ sam local start-api \
   --host 127.0.0.1 \
   --port 3000
 ```
-
-
-## 1つのCDKプロジェクトで複数CFスタックを作る
-
-```ts
-import * as cdk from "aws-cdk-lib";
-import { TodoStack } from "../lib/todo-stack";
-
-const app = new cdk.App();
-
-// 開発環境
-new TodoStack(app, "CdkHandsonStackDev", {
-  envName: "dev",
-});
-
-// 本番環境
-new TodoStack(app, "CdkHandsonStackProd", {
-  envName: "prod",
-});
-```
-
-開発環境だけデプロイ
-
-```
-cdk deploy TodoDevStack
-```
-
-本番環境だけデプロイ
-
-```
-cdk deploy TodoProdStack
-```
-
-どちらもデプロイ
-
-```
-cdk deploy --all
-```
-
-## L1 ? L2 ? L3 ?
-
-- 気にしないが吉。実装で気にすることは無い
-- AWSリソースを作るクラスにはLambdaを作るもの、API Gateway + Lambdaをまとめて作るものなど存在
-- 関連リソースをどのぐらいまとめて作るかのレベル分け（抽象化のレベル）
