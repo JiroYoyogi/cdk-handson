@@ -327,46 +327,116 @@ export class CdkHandsonStack extends cdk.Stack {
 
 # その他
 
-## 1つのCDKプロジェクトで複数CFスタックを作る
-
-```ts
-import * as cdk from "aws-cdk-lib";
-import { TodoStack } from "../lib/todo-stack";
-
-const app = new cdk.App();
-
-// 開発環境
-new TodoStack(app, "TodoDevStack", {
-  envName: "dev",
-});
-
-// 本番環境
-new TodoStack(app, "TodoProdStack", {
-  envName: "prod",
-});
-```
-
-開発環境だけデプロイ
-
-```
-cdk deploy TodoDevStack
-```
-
-本番環境だけデプロイ
-
-```
-cdk deploy TodoProdStack
-```
-
-どちらもデプロイ
-
-```
-cdk deploy --all
-```
-
 ## テストを書く
 
-ザクっと実装してるので下記で実行
+- test-handson.test.ts
+
+```ts
+import * as cdk from 'aws-cdk-lib/core';
+import { Match, Template } from 'aws-cdk-lib/assertions';
+import { CdkHandsonStack } from '../lib/cdk-handson-stack';
+
+describe('CdkHandsonStack', () => {
+  let template: Template;
+
+  beforeAll(() => {
+    const app = new cdk.App();
+    const stack = new CdkHandsonStack(app, 'MyTestStack');
+    template = Template.fromStack(stack);
+  });
+
+  test('Node.js 24のLambda関数を作成する', () => {
+    template.resourceCountIs('AWS::Lambda::Function', 1);
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      Runtime: 'nodejs24.x',
+      Handler: 'index.handler',
+    });
+  });
+
+  test('HTTP APIを作成する', () => {
+    template.resourceCountIs('AWS::ApiGatewayV2::Api', 1);
+    template.hasResourceProperties('AWS::ApiGatewayV2::Api', {
+      ProtocolType: 'HTTP',
+    });
+  });
+
+  test('GET /omikujiルートをLambda統合に接続する', () => {
+    template.resourceCountIs('AWS::ApiGatewayV2::Integration', 1);
+    template.hasResourceProperties('AWS::ApiGatewayV2::Integration', {
+      IntegrationType: 'AWS_PROXY',
+      IntegrationUri: {
+        'Fn::GetAtt': [Match.stringLikeRegexp('OmikujiFunction'), 'Arn'],
+      },
+      PayloadFormatVersion: '2.0',
+    });
+
+    template.resourceCountIs('AWS::ApiGatewayV2::Route', 1);
+    template.hasResourceProperties('AWS::ApiGatewayV2::Route', {
+      RouteKey: 'GET /omikuji',
+      Target: Match.objectLike({
+        'Fn::Join': Match.arrayWith([
+          Match.arrayWith([
+            Match.objectLike({
+              Ref: Match.stringLikeRegexp('OmikujiFunctionIntegration'),
+            }),
+          ]),
+        ]),
+      }),
+    });
+  });
+
+  test('API GatewayにLambdaを呼び出す権限を付与する', () => {
+    template.resourceCountIs('AWS::Lambda::Permission', 1);
+    template.hasResourceProperties('AWS::Lambda::Permission', {
+      Action: 'lambda:InvokeFunction',
+      Principal: 'apigateway.amazonaws.com',
+      FunctionName: {
+        'Fn::GetAtt': [Match.stringLikeRegexp('OmikujiFunction'), 'Arn'],
+      },
+    });
+  });
+
+  test('末尾が/omikujiのAPI URLを出力する', () => {
+    template.hasOutput('HttpApiOmikujiUrl', {
+      Value: {
+        'Fn::Join': Match.arrayWith([
+          Match.arrayWith(['/omikuji']),
+        ]),
+      },
+    });
+  });
+});
+```
+
+- lambda.test.ts
+
+```ts
+import type { APIGatewayProxyEventV2 } from 'aws-lambda';
+
+const { handler } = require('../lambda/index.ts') as typeof import('../lambda/index');
+
+describe('おみくじLambda', () => {
+  test('許可されたおみくじ結果をJSONで返す', async () => {
+    const response = await handler({} as APIGatewayProxyEventV2);
+
+    expect(response).toEqual(expect.objectContaining({
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+    }));
+
+    expect(response.body).toBeDefined();
+    const body = JSON.parse(response.body!);
+
+    expect(body).toEqual({
+      fortune: expect.stringMatching(/^(大吉|中吉|小吉|吉|末吉)$/),
+    });
+  });
+});
+```
+
+- テスト実行
 
 ```
 npm run test -- --verbose
@@ -393,6 +463,44 @@ sam local start-api \
   -t cdk.out/CdkHandsonStack.template.json \
   --host 127.0.0.1 \
   --port 3000
+```
+
+
+## 1つのCDKプロジェクトで複数CFスタックを作る
+
+```ts
+import * as cdk from "aws-cdk-lib";
+import { TodoStack } from "../lib/todo-stack";
+
+const app = new cdk.App();
+
+// 開発環境
+new TodoStack(app, "CdkHandsonStackDev", {
+  envName: "dev",
+});
+
+// 本番環境
+new TodoStack(app, "CdkHandsonStackProd", {
+  envName: "prod",
+});
+```
+
+開発環境だけデプロイ
+
+```
+cdk deploy TodoDevStack
+```
+
+本番環境だけデプロイ
+
+```
+cdk deploy TodoProdStack
+```
+
+どちらもデプロイ
+
+```
+cdk deploy --all
 ```
 
 ## L1 ? L2 ? L3 ?
