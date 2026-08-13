@@ -265,6 +265,15 @@ import * as path from 'node:path';
     });
 ```
 
+コンストラクトはAWSリソースを作るクラスとは限らない
+
+```ts
+    // APIGWのURLを出力したい
+    new cdk.CfnOutput(this, 'HttpApiOmikujiUrl', {
+      value: `${api.apiEndpoint}/omikuji`
+    });
+```
+
 # 完成コード
 
 ```ts
