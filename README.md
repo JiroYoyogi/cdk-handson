@@ -166,7 +166,7 @@ import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations
     });
 ```
 
-## Lambdaを更新①（外部JSファイル）
+## Lambdaを作成（関数のコードは外部JSファイル）
 
 - lambda/index.mjs
 
@@ -191,7 +191,7 @@ export const handler = async (event) => {
     });
 ```
 
-## Lambdaを更新②（TS * Node.jsライブラリ）
+## Lambdaを作成（TS * Node.jsライブラリ）
 
 - lambda/index.ts
 
@@ -262,15 +262,6 @@ import * as path from 'node:path';
       runtime: Runtime.NODEJS_24_X,
       handler: "index.handler",
       entry: path.join(__dirname, '../lambda/index.ts'),
-    });
-```
-
-コンストラクトはAWSリソースを作るクラスとは限らない
-
-```ts
-    // APIGWのURLを出力したい
-    new cdk.CfnOutput(this, 'HttpApiOmikujiUrl', {
-      value: `${api.apiEndpoint}/omikuji`
     });
 ```
 
