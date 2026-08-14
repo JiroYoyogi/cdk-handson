@@ -157,6 +157,18 @@ import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations
 ```ts
     const api = new HttpApi(this, "OmikujiHttpApi");
 
+    // 第3引数を使う例：CORSを許可
+    // const api = new HttpApi(this, "OmikujiHttpApi", {
+    //   corsPreflight: {
+    //     allowHeaders: ['content-type'],
+    //     allowMethods: [
+    //       CorsHttpMethod.GET,
+    //       CorsHttpMethod.OPTIONS,
+    //     ],
+    //     allowOrigins: ['*'],
+    //   }
+    // });
+
     const integration = new HttpLambdaIntegration('OmikujiFunctionIntegration', func);
 
     api.addRoutes({
@@ -297,12 +309,13 @@ export class CdkHandsonStack extends cdk.Stack {
 
     const api = new HttpApi(this, "OmikujiHttpApi");
 
-    // ↓ CORS許可設定などしたい場合
-    // const api = new HttpApi(this, "HelloHttpApi", {
+    // 第3引数を使う例：CORSを許可
+    // const api = new HttpApi(this, "OmikujiHttpApi", {
     //   corsPreflight: {
     //     allowHeaders: ['content-type'],
     //     allowMethods: [
-    //       CorsHttpMethod.GET,CorsHttpMethod.OPTIONS,
+    //       CorsHttpMethod.GET,
+    //       CorsHttpMethod.OPTIONS,
     //     ],
     //     allowOrigins: ['*'],
     //   }
