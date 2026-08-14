@@ -329,7 +329,7 @@ export class CdkHandsonStack extends cdk.Stack {
 
 ## テストを書く
 
-- test-handson.test.ts
+- test/cdk-handson.test.ts
 
 ```ts
 import * as cdk from 'aws-cdk-lib/core';
@@ -408,7 +408,7 @@ describe('CdkHandsonStack', () => {
 });
 ```
 
-- lambda.test.ts
+- test/lambda.test.ts
 
 ```ts
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
