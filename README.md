@@ -26,6 +26,11 @@ CDK CLIはNode.js製のCLIなのでNode.jsがインストールされてるこ�
 
 https://docs.aws.amazon.com/ja_jp/cdk/v2/guide/cli.html
 
+- AWSリージョンについて
+
+この動画では、AWSリージョンに東京リージョン（ap-northeast-1）を使用します。画面表示やコマンドの実行結果を動画と合わせたい方は、同じリージョンを選択してください。
+
+
 # ハンズオン手順
 
 1. 初期コードを準備
@@ -78,7 +83,7 @@ import { Function, Runtime, Code } from 'aws-cdk-lib/aws-lambda';
 
 - Lambda関数の定義
 
-公式リファレンス：[Lambdaクラス](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda-readme.html)、[APIGateway（HTTP API）クラス](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_apigatewayv2-readme.html)
+公式リファレンス：[Lambdaコンストラクト](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda-readme.html)
 
 
 ```ts
@@ -135,8 +140,8 @@ cdk deploy --profile プロファイル名
 
 ## 公式リファレンス
 
-- [Lambdaクラス](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda-readme.html)
-- [APIGateway（HTTP API）クラス](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_apigatewayv2-readme.html)
+- [Lambdaコンストラクト](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda-readme.html)
+- [APIGateway（HTTP API）コンストラクト](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_apigatewayv2-readme.html)
 
 
 # APIGatewayを作成・Lambdaと紐付け
